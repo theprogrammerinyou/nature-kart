@@ -60,7 +60,7 @@ export const Products = () => {
                   <CardActions>
                     <Button
                       variant="contained"
-                      color=""
+                      color="success"
                       onClick={goToCartButtonClick}
                       fullWidth
                     >
