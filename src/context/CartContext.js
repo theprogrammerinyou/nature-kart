@@ -1,26 +1,35 @@
 import { createContext, useContext, useReducer } from "react";
 
-const CartContext = createContext({});
+const CartContext = createContext({ cartItems: [] });
 
 export const CartProvider = ({ children }) => {
   const cartReducerFn = (totalCartItems, action) => {
     switch (action.type) {
-      case "ADD_TO_CART":
+      case "ADD_ITEM_TO_CART":
         return {
           ...totalCartItems,
           cartItems: [
             ...totalCartItems.cartItems,
-            { ...action.payload, quantity: action.payload.quantity + 1 },
+            { ...action.payload, quantity: 1 },
           ],
+        };
+      case "REMOVE_ITEM_FROM_CART":
+        return {
+          ...totalCartItems,
+          cartItems: totalCartItems.cartItems.filter(
+            (cartItem) => cartItem.id !== action.payload.id
+          ),
         };
       default:
         return { ...totalCartItems };
     }
   };
 
-  const [state, dispatch] = useReducer(cartReducerFn, {});
+  const [totalCartItems, cartDispatchFn] = useReducer(cartReducerFn, {
+    cartItems: [],
+  });
   return (
-    <CartContext.Provider value={{ state, dispatch }}>
+    <CartContext.Provider value={{ totalCartItems, cartDispatchFn }}>
       {children}
     </CartContext.Provider>
   );

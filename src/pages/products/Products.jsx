@@ -8,17 +8,31 @@ import {
   CardActions,
   Button,
   CardMedia,
+  Typography,
 } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import { useCartContext } from "../../context/CartContext";
+import { useNavigate } from "react-router-dom";
 
 export const Products = () => {
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
+  const { totalCartItems, cartDispatchFn } = useCartContext();
   const productsFromServer = async () => {
     const allProducts = await getProductsFromServer();
     setProducts(allProducts);
   };
 
   useEffect(() => productsFromServer(), []);
+
+  const addToCartButtonClick = (productDetails) => {
+    cartDispatchFn({ type: "ADD_ITEM_TO_CART", payload: productDetails });
+  };
+
+  const goToCartButtonClick = () => {
+    navigate("/cart");
+  };
+
   return (
     <Grid container>
       <Grid item xs={12}>
@@ -35,16 +49,37 @@ export const Products = () => {
                   src={product.image}
                   alt="product-image"
                 />
-                <CardActions>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<AddShoppingCartIcon />}
-                    fullWidth
-                  >
-                    Add To Cart
-                  </Button>
-                </CardActions>
+                <CardContent>
+                  <Typography variant="p" component="span">
+                    Quantity: {product.quantity}
+                  </Typography>
+                </CardContent>
+                {totalCartItems?.cartItems?.find(
+                  (cartItem) => cartItem.id === product.id
+                ) ? (
+                  <CardActions>
+                    <Button
+                      variant="contained"
+                      color=""
+                      onClick={goToCartButtonClick}
+                      fullWidth
+                    >
+                      Go To Cart
+                    </Button>
+                  </CardActions>
+                ) : (
+                  <CardActions>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => addToCartButtonClick(product)}
+                      startIcon={<AddShoppingCartIcon />}
+                      fullWidth
+                    >
+                      Add To Cart
+                    </Button>
+                  </CardActions>
+                )}
               </Card>
             </Grid>
           ))}
