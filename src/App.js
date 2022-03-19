@@ -1,5 +1,4 @@
 import React from "react";
-import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import { Products } from "./pages/products/Products";
 import { Login } from "./pages/Login/Login";
