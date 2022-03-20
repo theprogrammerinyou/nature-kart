@@ -13,8 +13,7 @@ export const products = [
     price: "5000",
     quantity: "5",
     categoryName: "non-fiction",
-    image:
-      "https://images-na.ssl-images-amazon.com/images/I/51mlyN35U9L._SX292_BO1,204,203,200_.jpg",
+    image: "	https://m.media-amazon.com/images/I/41ij2wmfHUL._AC_UY218_.jpg",
   },
   {
     _id: uuid(),
@@ -23,8 +22,7 @@ export const products = [
     price: "3000",
     quantity: 6,
     categoryName: "horror",
-    image:
-      "https://images-na.ssl-images-amazon.com/images/I/51mlyN35U9L._SX292_BO1,204,203,200_.jpg",
+    image: "	https://m.media-amazon.com/images/I/41ij2wmfHUL._AC_UY218_.jpg",
   },
   {
     _id: uuid(),
@@ -33,7 +31,6 @@ export const products = [
     price: "1000",
     quantity: 4,
     categoryName: "fiction",
-    image:
-      "https://images-na.ssl-images-amazon.com/images/I/51mlyN35U9L._SX292_BO1,204,203,200_.jpg",
+    image: "	https://m.media-amazon.com/images/I/41ij2wmfHUL._AC_UY218_.jpg",
   },
 ];
