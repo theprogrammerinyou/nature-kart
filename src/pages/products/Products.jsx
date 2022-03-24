@@ -13,7 +13,8 @@ import {
 } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { useCartContext } from "../../context/CartContext";
+import { useCartContext } from "../../context/cart-context";
+import { useWishlistContext } from "../../context/wishlist-context";
 import { useNavigate } from "react-router-dom";
 import { ProductStyles } from "./ProductStyles";
 
@@ -25,6 +26,7 @@ export const Products = () => {
 
   const navigate = useNavigate();
   const { totalCartItems, cartDispatchFn } = useCartContext();
+  const { wishlistDispatchFn } = useWishlistContext();
 
   const productsFromServer = async () => {
     setLoading(true);
@@ -39,6 +41,10 @@ export const Products = () => {
 
   const addToCartButtonClick = (productDetails) => {
     cartDispatchFn({ type: "ADD_ITEM_TO_CART", payload: productDetails });
+  };
+
+  const addToWishlistButtonClick = (productDetails) => {
+    wishlistDispatchFn({ type: "ADD_ITEM_WISHLIST", payload: productDetails });
   };
 
   const goToCartButtonClick = () => {
@@ -99,6 +105,15 @@ export const Products = () => {
                           fullWidth
                         >
                           Add To Cart
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => addToWishlistButtonClick(product)}
+                          startIcon={<AddShoppingCartIcon />}
+                          fullWidth
+                        >
+                          Add To Wishlist
                         </Button>
                       </CardActions>
                     )}

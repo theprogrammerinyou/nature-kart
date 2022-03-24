@@ -16,7 +16,7 @@ import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import { Search, SearchIconWrapper, StyledInputBase } from "./Search";
 import { Badge } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useCartContext } from "../context/CartContext";
+import { useCartContext } from "../context/cart-context";
 
 const pages = ["Products", "Blog"];
 const settings = ["Account", "Logout"];
