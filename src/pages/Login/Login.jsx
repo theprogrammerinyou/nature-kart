@@ -11,13 +11,17 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
+import { toast } from "react-toastify";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Copyright } from "../../components/Copyright";
 import { loginuser } from "../../api/auth";
+import { useNavigate } from "react-router-dom";
 
 const theme = createTheme();
 
 export const Login = () => {
+  const navigate = useNavigate();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -26,7 +30,16 @@ export const Login = () => {
       password: data.get("password"),
     };
     const loggedInUserData = await loginuser(userData);
-    localStorage.setItem("token", loggedInUserData?.encodedToken);
+    if (loggedInUserData) {
+      localStorage.setItem("token", loggedInUserData?.encodedToken);
+      toast.success("User logged in successfully", {
+        position: "top-right",
+        hideProgressBar: true,
+      });
+      navigate("/products");
+    } else {
+      toast.error("Invalid credentials");
+    }
   };
 
   return (
