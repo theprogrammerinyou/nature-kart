@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -9,15 +10,29 @@ import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
+import {
+  InputAdornment,
+  IconButton,
+  OutlinedInput,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { toast } from "react-toastify";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Copyright } from "../../components/Copyright";
 import { loginuser } from "../../api/auth";
+import { useNavigate } from "react-router-dom";
 
 const theme = createTheme();
 
 export const Login = () => {
+  const navigate = useNavigate();
+  const [isPasswordText, setIsPasswordText] = useState(false);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -26,7 +41,20 @@ export const Login = () => {
       password: data.get("password"),
     };
     const loggedInUserData = await loginuser(userData);
-    localStorage.setItem("token", loggedInUserData?.encodedToken);
+    if (loggedInUserData) {
+      localStorage.setItem("token", loggedInUserData?.encodedToken);
+      toast.success("User logged in successfully", {
+        position: "top-right",
+        hideProgressBar: true,
+      });
+      navigate("/products");
+    } else {
+      toast.error("Invalid credentials");
+    }
+  };
+
+  const handleClickShowPassword = () => {
+    setIsPasswordText(!isPasswordText);
   };
 
   return (
@@ -82,16 +110,30 @@ export const Login = () => {
                 autoComplete="email"
                 autoFocus
               />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
+              <FormControl fullWidth>
+                <InputLabel htmlFor="password">Password *</InputLabel>
+                <OutlinedInput
+                  required
+                  label="Password"
+                  type={isPasswordText ? "text" : "password"}
+                  id="password"
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        edge="end"
+                      >
+                        {isPasswordText ? (
+                          <VisibilityIcon />
+                        ) : (
+                          <VisibilityOffIcon />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
