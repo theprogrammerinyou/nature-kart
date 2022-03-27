@@ -6,7 +6,7 @@ export const signupUser = (userData) => {
       .post("/api/auth/signup", userData)
       .then((response) => {
         console.log("response", response);
-        resolve(response?.data?.data);
+        resolve(response?.data);
       })
       .catch((error) => {
         reject(error?.response?.data);
