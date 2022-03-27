@@ -15,11 +15,15 @@ import MenuItem from "@mui/material/MenuItem";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import { Search, SearchIconWrapper, StyledInputBase } from "./Search";
 import { Badge } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useCartContext } from "../context/CartContext";
 
 const pages = ["Products", "Blog"];
 const settings = ["Account", "Logout"];
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const { totalCartItems } = useCartContext();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -36,6 +40,10 @@ const Navbar = () => {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleCartIconClicked = () => {
+    navigate("/cart");
   };
 
   return (
@@ -117,8 +125,12 @@ const Navbar = () => {
             </Search>
           </Box>
           <Box sx={{ flexGrow: 0, marginRight: "1rem" }}>
-            <IconButton>
-              <Badge badgeContent={2} color="secondary">
+            <IconButton onClick={handleCartIconClicked}>
+              <Badge
+                badgeContent={totalCartItems?.cartItems?.length}
+                color="secondary"
+                showZero
+              >
                 <ShoppingCartCheckoutIcon />
               </Badge>
             </IconButton>
