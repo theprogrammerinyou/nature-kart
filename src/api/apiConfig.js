@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const onBeforeRequestSent = (config) => {
-  const token = window.accessToken;
+  const token = localStorage.getItem("token");
   if (token) config.headers.common.Authorization = `Bearer ${token}`;
   return config;
 };
