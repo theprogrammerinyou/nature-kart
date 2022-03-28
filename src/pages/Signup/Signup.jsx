@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,13 +12,28 @@ import Link from "@mui/material/Link";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import {
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  InputAdornment,
+  IconButton,
+} from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Copyright } from "../../components/Copyright";
 import { signupUser } from "../../api/auth";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 const theme = createTheme();
 
 export function SignUp() {
+  const navigate = useNavigate();
+
+  const [isPasswordText, setIsPasswordText] = useState(false);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -26,7 +42,15 @@ export function SignUp() {
       password: data.get("password"),
     };
     const signedUpUser = await signupUser(userData);
-    console.log("signed up user", signedUpUser);
+    if (signedUpUser) {
+      localStorage.setItem("token", signedUpUser?.encodedToken);
+      navigate("/products");
+      toast("User signed up successfully");
+    }
+  };
+
+  const handleClickShowPassword = () => {
+    setIsPasswordText(!isPasswordText);
   };
 
   return (
@@ -86,15 +110,30 @@ export function SignUp() {
                 />
               </Grid>
               <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                />
+                <FormControl fullWidth>
+                  <InputLabel htmlFor="password">Password *</InputLabel>
+                  <OutlinedInput
+                    required
+                    label="Password"
+                    type={isPasswordText ? "text" : "password"}
+                    id="password"
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          edge="end"
+                        >
+                          {isPasswordText ? (
+                            <VisibilityIcon />
+                          ) : (
+                            <VisibilityOffIcon />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
               </Grid>
               <Grid item xs={12}>
                 <FormControlLabel
