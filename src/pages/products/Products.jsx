@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { getProductsFromServer } from "../../api/products";
 import Navbar from "../../components/Navbar";
@@ -7,17 +8,20 @@ import {
   CardContent,
   CardActions,
   CardMedia,
+  Divider,
   Typography,
   CircularProgress,
 } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { useCartContext } from "../../context/CartContext";
+import { useCartContext } from "../../context/cart-context";
+import { useWishlistContext } from "../../context/wishlist-context";
 import { useNavigate } from "react-router-dom";
 import { ProductStyles } from "./ProductStyles";
 import API from "../../api/apiConfig";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { SecondaryButton } from "../../components/SecondaryButton";
+import { Filters } from "../../components/Filters/Filters";
 
 const APIURL = process.env.REACT_APP_API_URL;
 
@@ -29,6 +33,7 @@ export const Products = () => {
 
   const navigate = useNavigate();
   const { totalCartItems, cartDispatchFn } = useCartContext();
+  const { wishlistDispatchFn } = useWishlistContext();
 
   const productsFromServer = async () => {
     setLoading(true);
@@ -54,6 +59,22 @@ export const Products = () => {
     cartDispatchFn({ type: "ADD_ITEM_TO_CART", payload: productDetails });
   };
 
+  const addItemToWishlist = (productDetails) => {
+    API.post(`${APIURL}/api/user/wishlist`, {
+      product: productDetails,
+    })
+      .then((response) => {
+        console.log("response", response);
+      })
+      .catch((error) => {
+        console.error("error adding wishlist", error?.response?.data);
+      });
+    wishlistDispatchFn({
+      type: "ADD_ITEM_TO_WISHLIST",
+      payload: productDetails,
+    });
+  };
+
   const goToCartButtonClick = () => {
     navigate("/cart");
   };
@@ -69,53 +90,65 @@ export const Products = () => {
           <Grid item xs={12}>
             <Navbar />
           </Grid>
-          <Grid item sx={{ marginTop: "5rem" }}>
-            <Grid container spacing={5}>
-              {products?.map((product) => (
-                <Grid item key={product.id}>
-                  <Card>
-                    <CardContent>{product.title}</CardContent>
-                    <CardMedia
-                      component="img"
-                      src={product.image}
-                      alt="product-image"
-                    />
-                    <CardContent>
-                      <Typography variant="p" component="span">
-                        Quantity: {product?.quantity}
-                      </Typography>
-                      <Typography variant="h6" component="div">
-                        Rs. {product?.price}
-                      </Typography>
-                    </CardContent>
-                    {totalCartItems?.cartItems?.find(
-                      (cartItem) => cartItem?.id === product?.id
-                    ) ? (
-                      <CardActions>
+          <Grid
+            container
+            sx={{
+              marginTop: "5rem",
+            }}
+          >
+            <Grid item xs={2}>
+              <Filters />
+            </Grid>
+            <Grid item xs={10}>
+              <Grid container spacing={10}>
+                {products?.map((product) => (
+                  <Grid item key={product.id}>
+                    <Card sx={{ width: "15rem" }} raised>
+                      <div className={classes.imgContainer}>
+                        <img src={product.image} alt="product-image" />
+                      </div>
+                      <CardContent>
+                        <Typography variant="h6" component="div">
+                          {product.title}
+                        </Typography>
+                        <Typography variant="p" component="span">
+                          Quantity: {product?.quantity}
+                        </Typography>
+                        <Typography variant="h6" component="div">
+                          Rs. {product?.price}
+                        </Typography>
+                      </CardContent>
+                      <CardActions className={classes.cardActions}>
+                        {totalCartItems?.cartItems?.find(
+                          (cartItem) => cartItem?.id === product?.id
+                        ) ? (
+                          <SecondaryButton
+                            variant="contained"
+                            color="success"
+                            onClick={goToCartButtonClick}
+                            startIcon={<ShoppingCartIcon />}
+                            fullWidth
+                            text="Go to Cart"
+                          />
+                        ) : (
+                          <PrimaryButton
+                            variant="contained"
+                            color="secondary"
+                            onClick={() => addToCartButtonClick(product)}
+                            startIcon={<AddShoppingCartIcon />}
+                            fullWidth
+                            text="Add To Cart"
+                          />
+                        )}
                         <SecondaryButton
-                          variant="contained"
-                          color="success"
-                          onClick={goToCartButtonClick}
-                          startIcon={<ShoppingCartIcon />}
-                          fullWidth
-                          text="Go to Cart"
+                          text="Add To Wishlist"
+                          onClick={() => addItemToWishlist(product)}
                         />
                       </CardActions>
-                    ) : (
-                      <CardActions>
-                        <PrimaryButton
-                          variant="contained"
-                          color="secondary"
-                          onClick={() => addToCartButtonClick(product)}
-                          startIcon={<AddShoppingCartIcon />}
-                          fullWidth
-                          text="Add To Cart"
-                        />
-                      </CardActions>
-                    )}
-                  </Card>
-                </Grid>
-              ))}
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
             </Grid>
           </Grid>
         </>

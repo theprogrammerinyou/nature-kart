@@ -13,4 +13,14 @@ export const ProductStyles = makeStyles(() => ({
     backgroundColor: "rgba(0,0,0,0.5)",
     zIndex: "2",
   },
+  imgContainer: {
+    padding: "1rem",
+    width: "100%",
+    display: "grid",
+    placeItems: "center",
+  },
+  cardActions: {
+    display: "flex",
+    flexDirection: "column",
+  },
 }));

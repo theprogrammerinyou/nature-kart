@@ -1,8 +1,9 @@
-import { useCartContext } from "../../context/CartContext";
 import { Grid, Button, Typography } from "@mui/material";
-import Navbar from "../../components/Navbar";
-import { CartStyles } from "./CartStyles";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../../components/Navbar";
+import { useCartContext } from "../../context/cart-context";
+import { useWishlistContext } from "../../context/wishlist-context";
+import { CartStyles } from "./CartStyles";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { SecondaryButton } from "../../components/SecondaryButton";
 import { TertiaryButton } from "../../components/TertiaryButton";
@@ -11,7 +12,8 @@ export const Cart = () => {
   const navigate = useNavigate();
   const classes = CartStyles();
   const { totalCartItems, cartDispatchFn } = useCartContext();
-  const decreaseQuantity = (productDetails) => {
+  const { wishlistDispatchFn } = useWishlistContext();
+  const removeItemFromCart = (productDetails) => {
     cartDispatchFn({
       type: "DECREASE_QUANTITY",
       payload: productDetails,
@@ -26,7 +28,12 @@ export const Cart = () => {
   const onShowProductsButtonClick = () => {
     navigate("/products");
   };
-  const addItemToWishlist = () => {};
+  const addItemToWishlist = (productDetails) => {
+    wishlistDispatchFn({
+      type: "ADD_ITEM_TO_WISHLIST",
+      payload: productDetails,
+    });
+  };
   return (
     <>
       <Navbar />
@@ -65,7 +72,7 @@ export const Cart = () => {
                 <Grid container className={classes.buttons} spacing={2}>
                   <Grid item xs={4}>
                     <TertiaryButton
-                      onClick={() => decreaseQuantity(cartItem)}
+                      onClick={() => removeItemFromCart(cartItem)}
                       text="-"
                     />
                   </Grid>
