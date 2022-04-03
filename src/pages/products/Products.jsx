@@ -6,7 +6,6 @@ import {
   Card,
   CardContent,
   CardActions,
-  Button,
   CardMedia,
   Typography,
   CircularProgress,
@@ -16,6 +15,11 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useCartContext } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import { ProductStyles } from "./ProductStyles";
+import API from "../../api/apiConfig";
+import { PrimaryButton } from "../../components/PrimaryButton";
+import { SecondaryButton } from "../../components/SecondaryButton";
+
+const APIURL = process.env.REACT_APP_API_URL;
 
 export const Products = () => {
   const classes = ProductStyles();
@@ -38,6 +42,15 @@ export const Products = () => {
   useEffect(() => productsFromServer(), []);
 
   const addToCartButtonClick = (productDetails) => {
+    API.post(`${APIURL}/api/user/cart`, {
+      product: productDetails,
+    })
+      .then((response) => {
+        console.log("response", response);
+      })
+      .catch((error) => {
+        console.error("error adding cart", error?.response?.data);
+      });
     cartDispatchFn({ type: "ADD_ITEM_TO_CART", payload: productDetails });
   };
 
@@ -79,27 +92,25 @@ export const Products = () => {
                       (cartItem) => cartItem?.id === product?.id
                     ) ? (
                       <CardActions>
-                        <Button
+                        <SecondaryButton
                           variant="contained"
                           color="success"
                           onClick={goToCartButtonClick}
                           startIcon={<ShoppingCartIcon />}
                           fullWidth
-                        >
-                          Go To Cart
-                        </Button>
+                          text="Go to Cart"
+                        />
                       </CardActions>
                     ) : (
                       <CardActions>
-                        <Button
+                        <PrimaryButton
                           variant="contained"
                           color="secondary"
                           onClick={() => addToCartButtonClick(product)}
                           startIcon={<AddShoppingCartIcon />}
                           fullWidth
-                        >
-                          Add To Cart
-                        </Button>
+                          text="Add To Cart"
+                        />
                       </CardActions>
                     )}
                   </Card>

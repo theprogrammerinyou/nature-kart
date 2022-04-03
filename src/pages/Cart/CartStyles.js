@@ -1,16 +1,14 @@
 import { makeStyles } from "@mui/styles";
 
 export const CartStyles = makeStyles(() => ({
-  wrapperContainer: {
-    marginLeft: "3rem",
-    width: "25rem",
-    border: "1px solid black",
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "row-reverse",
+  gridContainer: {
+    margin: "auto",
+    width: "40rem!important",
+    border: "1px solid #fff",
+    boxShadow: "10px 10px 10px 5px #ccc",
+    borderRadius: "10px",
   },
-  buttons: {
-    display: "flex",
-    flexDirection: "row",
+  imgStyles: {
+    marginLeft: "2rem",
   },
 }));

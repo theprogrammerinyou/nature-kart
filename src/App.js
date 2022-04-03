@@ -4,6 +4,7 @@ import { Products } from "./pages/products/Products";
 import { Login } from "./pages/Login/Login";
 import { SignUp } from "./pages/Signup/Signup";
 import { Cart } from "./pages/Cart/Cart";
+import "./App.css";
 
 const App = () => {
   return (
