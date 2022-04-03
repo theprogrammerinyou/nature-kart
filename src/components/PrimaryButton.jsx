@@ -16,6 +16,7 @@ export const PrimaryButton = ({ text, onClick }) => {
       onClick={onClick}
       variant="contained"
       className={classes.buttonStyles}
+      fullWidth
     >
       {text}
     </Button>

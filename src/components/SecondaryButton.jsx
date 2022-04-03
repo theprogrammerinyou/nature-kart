@@ -17,6 +17,7 @@ export const SecondaryButton = ({ text, onClick }) => {
       onClick={onClick}
       variant="outlined"
       className={classes.buttonStyles}
+      fullWidth
     >
       {text}
     </Button>
