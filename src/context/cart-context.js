@@ -58,7 +58,7 @@ export const CartProvider = ({ children }) => {
         return {
           ...totalCartItems,
           cartItem: totalCartItems.cartItems.filter(
-            (item) => item.id !== action.payload.id
+            (item) => item._id !== action.payload._id
           ),
         };
       default:
